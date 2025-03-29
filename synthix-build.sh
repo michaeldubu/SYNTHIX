@@ -13,6 +13,7 @@ ARCH="amd64"
 
 # Create necessary directories
 # Add these lines before any file operations
+mkdir -p /usr/src/metakern-1.0
 mkdir -p /usr/lib/synthix
 mkdir -p ${WORK_DIR}/chroot/usr/lib/synthix
 mkdir -p ${WORK_DIR}/chroot/etc/synthix
