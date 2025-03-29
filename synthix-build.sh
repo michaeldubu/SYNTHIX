@@ -12,6 +12,10 @@ BASE_DISTRO="debian-minimal"
 ARCH="amd64"
 
 # Create necessary directories
+# Add these lines before any file operations
+mkdir -p ${WORK_DIR}/chroot/usr/lib/synthix
+mkdir -p ${WORK_DIR}/chroot/etc/synthix
+mkdir -p ${WORK_DIR}/chroot/var/lib/synthix/universes
 mkdir -p "${WORK_DIR}/chroot"
 mkdir -p "${WORK_DIR}/iso"
 mkdir -p "${OUTPUT_DIR}"
