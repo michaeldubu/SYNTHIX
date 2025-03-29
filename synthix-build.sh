@@ -84,6 +84,8 @@ action_threads=4
 universe_tick_rate=100
 EOFINNER
 
+EOF
+
 # Create the Agent Runtime Environment
 cat > /usr/lib/synthix/are.py << 'EOFINNER'
 #!/usr/bin/env python3
