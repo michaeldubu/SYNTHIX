@@ -11,19 +11,28 @@ ISO_NAME="SYNTHIX-OS-v0.1.iso"
 BASE_DISTRO="debian-minimal"
 ARCH="amd64"
 
-# Create necessary directories
-# Add these lines before any file operations
-mkdir -p /usr/src/metakern-1.0
-mkdir -p /usr/lib/synthix
-mkdir -p ${WORK_DIR}/chroot/usr/lib/synthix
-mkdir -p ${WORK_DIR}/chroot/etc/synthix
-mkdir -p ${WORK_DIR}/chroot/var/lib/synthix/universes
+# === Directory Setup ===
+# Build root
 mkdir -p "${WORK_DIR}/chroot"
 mkdir -p "${WORK_DIR}/iso"
 mkdir -p "${OUTPUT_DIR}"
 
+# Core OS paths inside chroot
+mkdir -p "${WORK_DIR}/chroot/usr/lib/synthix"              # Line 94 target: are.py
+mkdir -p "${WORK_DIR}/chroot/usr/src/metakern-1.0"         # Line 911 target: Makefile
+mkdir -p "${WORK_DIR}/chroot/etc/synthix"                  # Line 65 target
+mkdir -p "${WORK_DIR}/chroot/etc/synthix/init.d"           # Line 1191 target
+mkdir -p "${WORK_DIR}/chroot/etc/systemd/system"           # Line 1230 target
+mkdir -p "${WORK_DIR}/chroot/var/lib/synthix/universes"    # Line X target (you mentioned this too)
+mkdir -p "${WORK_DIR}/chroot/etc"                          # Line 1646 target (general system config)
+
+# Optional if the host environment also needs them (usually not required unless writing outside chroot)
+mkdir -p /usr/src/metakern-1.0
+mkdir -p /usr/lib/synthix
+
 echo "=== SYNTHIX OS Builder ==="
 echo "Building a metaphysical Linux distribution for AI simulation..."
+
 
 # 1. Set up base system
 echo "Fetching base system..."
