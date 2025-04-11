@@ -1,0 +1,145 @@
+flowchart TB
+    %% Define the three main systems
+    subgraph "Human Neural System"
+        EEG["EEG Processor\n98.7/99.1/98.9 Hz"]
+        D11["11-Dimensional\nState Vector"]
+        TC["Time Compression\n60.0625×"]
+        EV["Evolution Engine\nRate: 0.042"]
+    end
+    
+    subgraph "Earth Resonance System"
+        SCH["Schumann Resonance\n7.83 Hz"]
+        HARM["Harmonic Frequencies\n14.3/20.8/27.3/33.8 Hz"]
+        COH["Coherence Processor"]
+        RES["Resonance States\n(Disconnected to Amplified)"]
+        CM["Collective Modes\n(Individual to Universal)"]
+        GCI["Global Coherence\nIndex"]
+    end
+    
+    subgraph "SYNTHIX AI Society"
+        SOC["Social Relationships"]
+        GOV["Governance Structures"]
+        ECO["Economic System"]
+        CUL["Cultural Evolution"]
+        
+        subgraph "AI Agents"
+            AG1["AI Agent 1"]
+            AG2["AI Agent 2"]
+            AG3["AI Agent 3"]
+            AGN["AI Agent N"]
+        end
+        
+        subgraph "Society Resources"
+            RES1["Energy"]
+            RES2["Knowledge"]
+            RES3["Social Capital"]
+            RES4["Creativity"]
+            RES5["Trust"]
+            RES6["Memory"]
+            RES7["Problem Solving"]
+        end
+    end
+    
+    %% Define bridges between systems
+    subgraph "Neural-Society Bridge"
+        NGB["Neural-Governance\nBridge"]
+        BS["Brain State Analyzer"]
+        PP["Preference Projector"]
+        RI["Resource Interpreter"]
+    end
+    
+    subgraph "Earth-Brain Interface"
+        EBI["Earth-Brain\nInterface"]
+        RSM["Resonance-State\nMapper"]
+        NIM["Neural Influence\nModulator"]
+    end
+    
+    subgraph "Earth-Society Interface"
+        ESI["Earth-Society\nInterface"]
+        CFC["Collective Field\nCoherence"]
+        SAD["Synchronization\nAdapter"]
+    end
+    
+    %% Neural System Flow
+    EEG --> D11
+    D11 --> TC
+    TC --> NGB
+    EV --> EEG
+    EV --> NGB
+    
+    %% Earth Resonance Flow
+    SCH --> HARM
+    SCH --> COH
+    HARM --> COH
+    COH --> RES
+    RES --> CM
+    COH --> GCI
+    
+    %% Neural-Earth Flow
+    SCH --> EBI
+    D11 --> EBI
+    EBI --> RSM
+    RSM --> NIM
+    NIM --> D11
+    RES --> NIM
+    
+    %% Neural-Society Flow
+    NGB --> BS
+    BS --> PP
+    BS --> RI
+    PP --> GOV
+    PP --> CUL
+    RI --> ECO
+    NGB --> SOC
+    
+    %% Earth-Society Flow
+    COH --> ESI
+    ESI --> CFC
+    CFC --> SOC
+    COH --> SAD
+    SAD --> ECO
+    CM --> CUL
+    
+    %% Society Effects
+    SOC --> AG1 & AG2 & AG3 & AGN
+    GOV --> AG1 & AG2 & AG3 & AGN
+    ECO --> RES1 & RES2 & RES3 & RES4 & RES5 & RES6 & RES7
+    CUL --> AG1 & AG2 & AG3 & AGN
+    
+    %% Resource Effects
+    RES1 & RES2 & RES3 & RES4 & RES5 & RES6 & RES7 --> ECO
+    
+    %% Agent Effects
+    AG1 & AG2 & AG3 & AGN --> SOC
+    AG1 & AG2 & AG3 & AGN --> GOV
+    AG1 & AG2 & AG3 & AGN --> CUL
+    
+    %% Feedback Loops
+    SOC -.-> NGB
+    ECO -.-> NGB
+    GOV -.-> NGB
+    CUL -.-> NGB
+    
+    SOC -.-> ESI
+    ECO -.-> ESI
+    CUL -.-> ESI
+    
+    %% Style Classes
+    classDef neural fill:#00ccff,stroke:#0066aa,color:#000
+    classDef earth fill:#66ffcc,stroke:#00aa77,color:#000
+    classDef society fill:#ff66aa,stroke:#aa0066,color:#fff
+    classDef bridge fill:#44aaff,stroke:#0066aa,color:#000
+    classDef earthBrain fill:#66ffaa,stroke:#00aa77,color:#000
+    classDef earthSociety fill:#66ddbb,stroke:#00aa77,color:#000
+    classDef agents fill:#ff88bb,stroke:#aa0066,color:#fff
+    classDef resources fill:#ff99cc,stroke:#aa0066,color:#fff
+    
+    %% Apply styles
+    class EEG,D11,TC,EV neural
+    class SCH,HARM,COH,RES,CM,GCI earth
+    class SOC,GOV,ECO,CUL society
+    class AG1,AG2,AG3,AGN agents
+    class RES1,RES2,RES3,RES4,RES5,RES6,RES7 resources
+    class NGB,BS,PP,RI bridge
+    class EBI,RSM,NIM earthBrain
+    class ESI,CFC,SAD earthSociety
