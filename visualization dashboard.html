@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NeuroSYNTHIX Integration Dashboard</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #0a0a1a;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    
+    .header {
+      background-color: #131340;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .header h1 {
+      color: #00ccff;
+      margin: 0;
+      font-weight: normal;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      color: #00ccff;
+      opacity: 0.8;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+      padding: 20px;
+    }
+    
+    @media (max-width: 1200px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .panel {
+      background-color: #131330;
+      border-radius: 5px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .panel h2 {
+      color: #00ccff;
+      font-size: 18px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #252550;
+    }
+    
+    .panel-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .visualization {
+      height: 300px;
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .brain-activity {
+      height: 400px;
+      position: relative;
+    }
+    
+    .dimension-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-gap: 10px;
+    }
+    
+    .dimension {
+      height: 60px;
+      background-color: #131340;
+      border-radius: 3px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .dimension-title {
+      font-size: 12px;
+      color: #00ccff;
+      margin-bottom: 5px;
+    }
+    
+    .dimension-value {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .dimension-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background-color: #00ccff;
+      transition: width 0.5s ease;
+    }
+    
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+    }
+    
+    .metric {
+      background-color: #131340;
+      border-radius: 3px;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .metric-title {
+      font-size: 12px;
+      color: #8888a0;
+      margin-bottom: 5px;
+    }
+    
+    .metric-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ccff;
+    }
+    
+    .society-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 15px;
+    }
+    
+    .society-metric {
+      background-color: #131340;
+      border-radius: 3px;
+      padding: 10px 15px;
+    }
+    
+    .society-metric-title {
+      font-size: 12px;
+      color: #8888a0;
+      margin-bottom: 3px;
+    }
+    
+    .society-metric-value {
+      font-size: 16px;
+      font-weight: bold;
+      color: #00ccff;
+    }
+    
+    .progress-bar {
+      height: 5px;
+      width: 100%;
+      background-color: #1c1c50;
+      border-radius: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: #00ccff;
+      transition: width 0.5s ease;
+    }
+    
+    .log-container {
+      height: 180px;
+      overflow-y: auto;
+      background-color: #0c0c25;
+      border-radius: 3px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    
+    .log-entry {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #1a1a40;
+    }
+    
+    .log-time {
+      color: #6666aa;
+    }
+    
+    .log-type {
+      display: inline-block;
+      padding: 2px 5px;
+      border-radius: 3px;
+      margin: 0 5px;
+      font-size: 10px;
+    }
+    
+    .log-type.social {
+      background-color: #2255aa;
+      color: white;
+    }
+    
+    .log-type.resource {
+      background-color: #22aa55;
+      color: white;
+    }
+    
+    .log-type.governance {
+      background-color: #aa2255;
+      color: white;
+    }
+    
+    .neural-connections {
+      height: 300px;
+      position: relative;
+    }
+    
+    .agent {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #333366;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+    }
+    
+    .agent.neural {
+      background-color: #00ccff;
+      color: #131340;
+      font-weight: bold;
+      z-index: 10;
+    }
+    
+    .connection {
+      position: absolute;
+      background-color: #333366;
+      transform-origin: left center;
+      height: 2px;
+      z-index: 5;
+    }
+    
+    .connection.neural {
+      background-color: #00ccff;
+      box-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
+    }
+    
+    .health-indicators {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 15px;
+    }
+    
+    .health-indicator {
+      background-color: #131340;
+      border-radius: 3px;
+      padding: 15px;
+    }
+    
+    .health-title {
+      font-size: 14px;
+      color: #00ccff;
+      margin-bottom: 10px;
+    }
+    
+    .health-chart {
+      height: 120px;
+      background-color: #0c0c25;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .health-bar {
+      position: absolute;
+      bottom: 0;
+      width: 5%;
+      background-color: #00ccff;
+      transition: height 0.5s ease;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    button {
+      background-color: #131340;
+      color: #00ccff;
+      border: 1px solid #252550;
+      border-radius: 3px;
+      padding: 8px 15px;
+      cursor: pointer;
+      flex: 1;
+    }
+    
+    button:hover {
+      background-color: #1a1a50;
+    }
+    
+    button:active {
+      background-color: #252560;
+    }
+    
+    .status {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .status.active {
+      background-color: #22aa55;
+      color: white;
+    }
+    
+    .status.inactive {
+      background-color: #aa2255;
+      color: white;
+    }
+    
+    /* 3D Brain visualization container */
+    .brain-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      perspective: 1200px;
+    }
+    
+    .brain {
+      position: absolute;
+      width: 200px;
+      height: 160px;
+      left: calc(50% - 100px);
+      top: calc(50% - 80px);
+      transform-style: preserve-3d;
+      animation: rotate 20s infinite linear;
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotateY(0) rotateX(15deg); }
+      100% { transform: rotateY(360deg) rotateX(15deg); }
+    }
+    
+    .node {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #00ccff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0, 204, 255, 0.8);
+      transform-style: preserve-3d;
+    }
+    
+    .connection-3d {
+      position: absolute;
+      background-color: rgba(0, 204, 255, 0.3);
+      transform-style: preserve-3d;
+      transform-origin: left center;
+      width: 100%;
+      height: 1px;
+    }
+    
+    .active-region {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: rgba(255, 100, 100, 0.5);
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(255, 100, 100, 0.8);
+      animation: pulse 2s infinite alternate;
+      transform-style: preserve-3d;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.4; }
+      100% { transform: scale(1.2); opacity: 0.8; }
+    }
+    
+    .wave {
+      position: absolute;
+      width: 100%;
+      height: 60px;
+      bottom: 0;
+      left: 0;
+    }
+    
+    .wave path {
+      fill: none;
+      stroke: rgba(0, 204, 255, 0.3);
+      stroke-width: 2px;
+    }
+    
+    .wave.f1 path {
+      animation: wave1 10s linear infinite;
+      stroke: rgba(0, 204, 255, 0.4);
+    }
+    
+    .wave.f2 path {
+      animation: wave2 5s linear infinite;
+      stroke: rgba(0, 204, 255, 0.3);
+    }
+    
+    .wave.f3 path {
+      animation: wave3 7s linear infinite;
+      stroke: rgba(0, 204, 255, 0.2);
+    }
+    
+    @keyframes wave1 {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 1000; }
+    }
+    
+    @keyframes wave2 {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -1000; }
+    }
+    
+    @keyframes wave3 {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 1000; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>NeuroSYNTHIX Integration System</h1>
+    <div class="subtitle">11-Dimensional Brain-To-AI-Society Interface</div>
+  </div>
+  
+  <div class="dashboard">
+    <!-- EEG and Brain Activity Panel -->
+    <div class="panel">
+      <h2>Neural Interface</h2>
+      <div class="status active">ACTIVE</div>
+      
+      <div class="brain-activity">
+        <div class="brain-container">
+          <div class="brain" id="brain">
+            <!-- Brain nodes will be generated by JS -->
+          </div>
+        </div>
+        
+        <!-- Wave visualization for frequencies 98.7/99.1/98.9 Hz -->
+        <svg class="wave f1" viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <path d="M0,30 Q300,10 600,30 T1200,30" id="wave1"></path>
+        </svg>
+        <svg class="wave f2" viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <path d="M0,30 Q300,50 600,30 T1200,30" id="wave2"></path>
+        </svg>
+        <svg class="wave f3" viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <path d="M0,30 Q150,10 300,30 T600,30 T900,30 T1200,30" id="wave3"></path>
+        </svg>
+      </div>
+      
+      <div class="panel-row">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-title">BRAIN ACTIVITY</div>
+            <div class="metric-value" id="brain-activity">SOCIAL</div>
+          </div>
+          <div class="metric">
+            <div class="metric-title">EMOTIONAL VALENCE</div>
+            <div class="metric-value" id="emotional-valence">+0.42</div>
+          </div>
+          <div class="metric">
+            <div class="metric-title">DECISION CONFIDENCE</div>
+            <div class="metric-value" id="decision-confidence">0.73</div>
+          </div>
+        </div>
+      </div>
+      
+      <h2>11-Dimensional State Vector</h2>
+      <div class="dimension-container">
+        <div class="dimension">
+          <div class="dimension-title">SPATIAL X</div>
+          <div class="dimension-value" id="dim-0">0.32</div>
+          <div class="dimension-bar" id="dim-bar-0" style="width: 32%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">SPATIAL Y</div>
+          <div class="dimension-value" id="dim-1">-0.18</div>
+          <div class="dimension-bar" id="dim-bar-1" style="width: 18%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">SPATIAL Z</div>
+          <div class="dimension-value" id="dim-2">0.56</div>
+          <div class="dimension-bar" id="dim-bar-2" style="width: 56%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">TEMPORAL</div>
+          <div class="dimension-value" id="dim-3">0.71</div>
+          <div class="dimension-bar" id="dim-bar-3" style="width: 71%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">INTENTIONALITY</div>
+          <div class="dimension-value" id="dim-4">0.88</div>
+          <div class="dimension-bar" id="dim-bar-4" style="width: 88%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">CONCEPTUAL</div>
+          <div class="dimension-value" id="dim-5">0.42</div>
+          <div class="dimension-bar" id="dim-bar-5" style="width: 42%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">CONTEXTUAL</div>
+          <div class="dimension-value" id="dim-6">-0.23</div>
+          <div class="dimension-bar" id="dim-bar-6" style="width: 23%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">ENTROPY</div>
+          <div class="dimension-value" id="dim-7">0.15</div>
+          <div class="dimension-bar" id="dim-bar-7" style="width: 15%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">EMOTIONAL</div>
+          <div class="dimension-value" id="dim-8">0.64</div>
+          <div class="dimension-bar" id="dim-bar-8" style="width: 64%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">MEMORY</div>
+          <div class="dimension-value" id="dim-9">0.37</div>
+          <div class="dimension-bar" id="dim-bar-9" style="width: 37%"></div>
+        </div>
+        <div class="dimension">
+          <div class="dimension-title">PREDICTION</div>
+          <div class="dimension-value" id="dim-10">-0.52</div>
+          <div class="dimension-bar" id="dim-bar-10" style="width: 52%"></div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="generate-btn">GENERATE EEG</button>
+        <button id="process-btn">PROCESS</button>
+        <button id="calibrate-btn">CALIBRATE (60.0625×)</button>
+      </div>
+    </div>
+    
+    <!-- SYNTHIX Governance Panel -->
+    <div class="panel">
+      <h2>AI Society Integration</h2>
+      
+      <div class="neural-connections" id="social-network">
+        <!-- Social network visualization will be generated by JS -->
+      </div>
+      
+      <div class="panel-row">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-title">SOCIAL CONNECTIONS</div>
+            <div class="metric-value" id="connection-count">12</div>
+          </div>
+          <div class="metric">
+            <div class="metric-title">NEURAL INFLUENCE</div>
+            <div class="metric-value" id="neural-influence">68%</div>
+          </div>
+          <div class="metric">
+            <div class="metric-title">EVOLUTION RATE</div>
+            <div class="metric-value">0.042</div>
+          </div>
+        </div>
+      </div>
+      
+      <h2>Neural-Society Interface</h2>
+      <div class="society-metrics">
+        <div class="society-metric">
+          <div class="society-metric-title">SOCIAL COHESION</div>
+          <div class="society-metric-value" id="social-cohesion">0.72</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="social-cohesion-bar" style="width: 72%"></div>
+          </div>
+        </div>
+        <div class="society-metric">
+          <div class="society-metric-title">GOVERNANCE EFFECTIVENESS</div>
+          <div class="society-metric-value" id="governance-effectiveness">0.68</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="governance-effectiveness-bar" style="width: 68%"></div>
+          </div>
+        </div>
+        <div class="society-metric">
+          <div class="society-metric-title">CULTURAL DIVERSITY</div>
+          <div class="society-metric-value" id="cultural-diversity">0.84</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="cultural-diversity-bar" style="width: 84%"></div>
+          </div>
+        </div>
+        <div class="society-metric">
+          <div class="society-metric-title">ECONOMIC HEALTH</div>
+          <div class="society-metric-value" id="economic-health">0.77</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="economic-health-bar" style="width: 77%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <h2>Integration Activity Log</h2>
+      <div class="log-container" id="activity-log">
+        <div class="log-entry">
+          <span class="log-time">00:00:00</span>
+          <span class="log-type social">SOCIAL</span>
+          <span class="log-message">Neural integration initialized</span>
+        </div>
+        <div class="log-entry">
+          <span class="log-time">00:00:05</span>
+          <span class="log-type resource">RESOURCE</span>
+          <span class="log-message">Generated KNOWLEDGE +1.2 units</span>
+        </div>
+        <div class="log-entry">
+          <span class="log-time">00:00:12</span>
+          <span class="log-type governance">GOVERNANCE</span>
+          <span class="log-message">Created neural policy "Resource Optimization"</span>
+        </div>
+      </div>
+      
+      <div class="health-indicators">
+        <div class="health-indicator">
+          <div class="health-title">NEURAL RESOURCE GENERATION</div>
+          <div class="health-chart" id="resource-chart">
+            <!-- Resource bars will be generated by JS -->
+          </div>
+        </div>
+        <div class="health-indicator">
+          <div class="health-title">SOCIETY HEALTH EVOLUTION (0.042)</div>
+          <div class="health-chart" id="society-chart">
+            <!-- Society health bars will be generated by JS -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="social-btn">SOCIAL INTERACTION</button>
+        <button id="governance-btn">INFLUENCE GOVERNANCE</button>
+        <button id="meme-btn">CREATE CULTURAL MEME</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Constants for our system
+    const FREQUENCIES = [98.7, 99.1, 98.9];
+    const COMPRESSION_RATE = 60.0625;
+    const EVOLUTION_RATE = 0.042;
+    const DIMENSIONS = 11;
+    
+    // Dynamic simulation
+    let simulationActive = true;
+    let brainActivityTypes = [
+      'NEUTRAL', 'CURIOSITY', 'CREATIVITY', 'PLANNING', 
+      'DECISION', 'EMOTIONAL', 'SOCIAL', 'ANALYTICAL', 
+      'MEMORY', 'SPATIAL', 'LINGUISTIC'
+    ];
+    let currentActivityIndex = 6; // Start with SOCIAL
+    
+    // Generate state vector
+    let stateVector = Array(DIMENSIONS).fill(0).map(() => (Math.random() * 2 - 1));
+    
+    // Society metrics
+    let societyMetrics = {
+      socialCohesion: 0.72,
+      governanceEffectiveness: 0.68,
+      culturalDiversity: 0.84,
+      economicHealth: 0.77
+    };
+    
+    // Resource history
+    let resourceHistory = Array(20).fill(0).map(() => Math.random() * 0.8 + 0.2);
+    
+    // Society health history
+    let societyHistory = Array(20).fill(0).map(() => Math.random() * 0.4 + 0.5);
+    
+    // Update state vector display
+    function updateStateVector() {
+      for (let i = 0; i < DIMENSIONS; i++) {
+        const value = stateVector[i].toFixed(2);
+        const absValue = Math.abs(stateVector[i]);
+        const element = document.getElementById(`dim-${i}`);
+        const barElement = document.getElementById(`dim-bar-${i}`);
+        
+        if (element) {
+          element.textContent = value;
+          element.style.color = stateVector[i] >= 0 ? '#00ccff' : '#ff6666';
+        }
+        
+        if (barElement) {
+          barElement.style.width = `${absValue * 100}%`;
+          barElement.style.backgroundColor = stateVector[i] >= 0 ? '#00ccff' : '#ff6666';
+        }
+      }
+    }
+    
+    // Update metrics display
+    function updateMetrics() {
+      const emotionalValence = stateVector[8].toFixed(2);
+      document.getElementById('emotional-valence').textContent = emotionalValence;
+      document.getElementById('emotional-valence').style.color = 
+        parseFloat(emotionalValence) >= 0 ? '#00ccff' : '#ff6666';
+      
+      const intentionality = Math.abs(stateVector[4]);
+      const entropy = Math.abs(stateVector[7]);
+      const decisionConfidence = (intentionality * (1.0 - entropy)).toFixed(2);
+      document.getElementById('decision-confidence').textContent = decisionConfidence;
+      
+      // Update brain activity
+      document.getElementById('brain-activity').textContent = brainActivityTypes[currentActivityIndex];
+    }
+    
+    // Update society metrics
+    function updateSocietyMetrics() {
+      for (const [key, value] of Object.entries(societyMetrics)) {
+        const formattedKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+        const element = document.getElementById(formattedKey);
+        const barElement = document.getElementById(`${formattedKey}-bar`);
+        
+        if (element) {
+          element.textContent = value.toFixed(2);
+        }
+        
+        if (barElement) {
+          barElement.style.width = `${value * 100}%`;
+        }
+      }
+      
+      // Update neural influence
+      const influence = Math.floor(40 + Math.abs(stateVector[8]) * 40);
+      document.getElementById('neural-influence').textContent = `${influence}%`;
+      
+      // Update connection count
+      const connections = Math.floor(8 + Math.abs(stateVector[6]) * 10);
+      document.getElementById('connection-count').textContent = connections;
+    }
+    
+    // Generate brain visualization
+    function initBrain() {
+      const brain = document.getElementById('brain');
+      const nodeCount = 50;
+      
+      // Clear existing nodes
+      brain.innerHTML = '';
+      
+      // Generate random nodes
+      for (let i = 0; i < nodeCount; i++) {
+        const node = document.createElement('div');
+        node.className = 'node';
+        
+        // Random position in 3D space (brain-shaped)
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+        const r = 70 + Math.random() * 20;
+        
+        // Convert to cartesian coordinates
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.sin(phi) * Math.sin(theta) * 0.8; // Compress y axis slightly for brain shape
+        const z = r * Math.cos(phi);
+        
+        // Apply to node
+        node.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+        
+        // Random size variation
+        const size = 2 + Math.random() * 6;
+        node.style.width = `${size}px`;
+        node.style.height = `${size}px`;
+        
+        brain.appendChild(node);
+      }
+      
+      // Generate connections between nodes
+      const connections = nodeCount * 2;
+      
+      for (let i = 0; i < connections; i++) {
+        const connection = document.createElement('div');
+        connection.className = 'connection-3d';
+        
+        // Random nodes to connect
+        const fromIdx = Math.floor(Math.random() * nodeCount);
+        const toIdx = Math.floor(Math.random() * nodeCount);
+        
+        // Skip if same node
+        if (fromIdx === toIdx) continue;
+        
+        const fromNode = brain.children[fromIdx];
+        const toNode = brain.children[toIdx];
+        
+        // Get positions
+        const fromTransform = fromNode.style.transform;
+        const toTransform = toNode.style.transform;
+        
+        // Extract coordinates (simplified approach)
+        const fromCoords = fromTransform.match(/translate3d\(([^,]+)px, ([^,]+)px, ([^)]+)px\)/);
+        const toCoords = toTransform.match(/translate3d\(([^,]+)px, ([^,]+)px, ([^)]+)px\)/);
+        
+        if (!fromCoords || !toCoords) continue;
+        
+        const fromX = parseFloat(fromCoords[1]);
+        const fromY = parseFloat(fromCoords[2]);
+        const fromZ = parseFloat(fromCoords[3]);
+        
+        const toX = parseFloat(toCoords[1]);
+        const toY = parseFloat(toCoords[2]);
+        const toZ = parseFloat(toCoords[3]);
+        
+        // Calculate distance and angle
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        const dz = toZ - fromZ;
+        
+        const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        // Position connection
+        connection.style.width = `${distance}px`;
+        connection.style.transform = `translate3d(${fromX}px, ${fromY}px, ${fromZ}px) rotateZ(${angle}deg)`;
+        
+        brain.appendChild(connection);
+      }
+      
+      // Add active region based on current brain activity
+      updateBrainActivity();
+    }
+    
+    // Update brain activity visualization
+    function updateBrainActivity() {
+      // Remove existing active regions
+      const existingRegions = document.querySelectorAll('.active-region');
+      existingRegions.forEach(region => region.remove());
+      
+      // Different regions for different activity types
+      const activityPositions = {
+        'NEUTRAL': { x: 0, y: 0, z: 50 },
+        'CURIOSITY': { x: 70, y: -20, z: 20 },
+        'CREATIVITY': { x: 60, y: 40, z: 20 },
+        'PLANNING': { x: -60, y: 0, z: 40 },
+        'DECISION': { x: -40, y: -40, z: 20 },
+        'EMOTIONAL': { x: 0, y: 50, z: 30 },
+        'SOCIAL': { x: 50, y: 30, z: -30 },
+        'ANALYTICAL': { x: -50, y: 30, z: -20 },
+        'MEMORY': { x: -60, y: -30, z: -20 },
+        'SPATIAL': { x: 20, y: -50, z: -30 },
+        'LINGUISTIC': { x: 70, y: 0, z: 0 }
+      };
+      
+      const currentActivity = brainActivityTypes[currentActivityIndex];
+      const position = activityPositions[currentActivity];
+      
+      const brain = document.getElementById('brain');
+      const activeRegion = document.createElement('div');
+      activeRegion.className = 'active-region';
+      
+      activeRegion.style.transform = `translate3d(${position.x}px, ${position.y}px, ${position.z}px)`;
+      
+      brain.appendChild(activeRegion);
+    }
+    
+    // Initialize social network
+    function initSocialNetwork() {
+      const container = document.getElementById('social-network');
+      const agentCount = 15;
+      
+      // Clear existing network
+      container.innerHTML = '';
+      
+      // Create neural agent (user)
+      const neuralAgent = document.createElement('div');
+      neuralAgent.className = 'agent neural';
+      neuralAgent.textContent = 'N';
+      neuralAgent.style.left = '50%';
+      neuralAgent.style.top = '50%';
+      container.appendChild(neuralAgent);
+      
+      // Create AI agents
+      const agents = [];
+      for (let i = 0; i < agentCount; i++) {
+        const agent = document.createElement('div');
+        agent.className = 'agent';
+        agent.textContent = i + 1;
+        
+        // Position in circle around neural agent
+        const angle = (i / agentCount) * Math.PI * 2;
+        const radius = 100 + Math.random() * 30;
+        const x = Math.cos(angle) * radius + 50;
+        const y = Math.sin(angle) * radius + 50;
+        
+        agent.style.left = `${x}%`;
+        agent.style.top = `${y}%`;
+        
+        container.appendChild(agent);
+        agents.push(agent);
+      }
+      
+      // Create connections
+      const connectionCount = Math.floor(document.getElementById('connection-count').textContent);
+      
+      // Neural agent connections
+      for (let i = 0; i < connectionCount && i < agentCount; i++) {
+        const connection = document.createElement('div');
+        connection.className = 'connection neural';
+        
+        // Calculate positions
+        const neuralRect = neuralAgent.getBoundingClientRect();
+        const agentRect = agents[i].getBoundingClientRect();
+        
+        const neuralX = neuralRect.left + neuralRect.width/2;
+        const neuralY = neuralRect.top + neuralRect.height/2;
+        const agentX = agentRect.left + agentRect.width/2;
+        const agentY = agentRect.top + agentRect.height/2;
+        
+        const dx = agentX - neuralX;
+        const dy = agentY - neuralY;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        // Set connection style
+        connection.style.width = `${distance}px`;
+        connection.style.left = `${neuralX}px`;
+        connection.style.top = `${neuralY}px`;
+        connection.style.transform = `rotate(${angle}deg)`;
+        
+        container.appendChild(connection);
+      }
+      
+      // Random connections between AI agents
+      for (let i = 0; i < agentCount * 1.5; i++) {
+        const connection = document.createElement('div');
+        connection.className = 'connection';
+        
+        const fromIdx = Math.floor(Math.random() * agentCount);
+        let toIdx = Math.floor(Math.random() * agentCount);
+        
+        // Skip if same agent
+        if (fromIdx === toIdx) continue;
+        
+        const fromAgent = agents[fromIdx];
+        const toAgent = agents[toIdx];
+        
+        // Calculate positions
+        const fromRect = fromAgent.getBoundingClientRect();
+        const toRect = toAgent.getBoundingClientRect();
+        
+        const fromX = fromRect.left + fromRect.width/2;
+        const fromY = fromRect.top + fromRect.height/2;
+        const toX = toRect.left + toRect.width/2;
+        const toY = toRect.top + toRect.height/2;
+        
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        // Set connection style
+        connection.style.width = `${distance}px`;
+        connection.style.left = `${fromX}px`;
+        connection.style.top = `${fromY}px`;
+        connection.style.transform = `rotate(${angle}deg)`;
+        
+        container.appendChild(connection);
+      }
+    }
+    
+    // Initialize resource chart
+    function initResourceChart() {
+      const chart = document.getElementById('resource-chart');
+      
+      // Clear existing bars
+      chart.innerHTML = '';
+      
+      // Create bars
+      for (let i = 0; i < resourceHistory.length; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'health-bar';
+        bar.style.left = `${i * (100 / resourceHistory.length)}%`;
+        bar.style.height = `${resourceHistory[i] * 100}%`;
+        
+        chart.appendChild(bar);
+      }
+    }
+    
+    // Initialize society chart
+    function initSocietyChart() {
+      const chart = document.getElementById('society-chart');
+      
+      // Clear existing bars
+      chart.innerHTML = '';
+      
+      // Create bars
+      for (let i = 0; i < societyHistory.length; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'health-bar';
+        bar.style.left = `${i * (100 / societyHistory.length)}%`;
+        bar.style.height = `${societyHistory[i] * 100}%`;
+        
+        chart.appendChild(bar);
+      }
+    }
+    
+    // Update resource history
+    function updateResourceHistory() {
+      // Shift array and add new value
+      resourceHistory.shift();
+      
+      // New value influenced by intentionality dimension
+      const newValue = 0.2 + Math.max(0, stateVector[4]) * 0.8;
+      resourceHistory.push(newValue);
+      
+      // Update chart
+      initResourceChart();
+    }
+    
+    // Update society history
+    function updateSocietyHistory() {
+      // Shift array and add new value
+      societyHistory.shift();
+      
+      // Society health influenced by multiple dimensions
+      const emotionalInfluence = Math.max(0, stateVector[8]) * 0.3;
+      const socialInfluence = Math.max(0, stateVector[6]) * 0.3;
+      const conceptualInfluence = Math.max(0, stateVector[5]) * 0.2;
+      
+      const newValue = 0.4 + emotionalInfluence + socialInfluence + conceptualInfluence;
+      societyHistory.push(Math.min(newValue, 1.0));
+      
+      // Update chart
+      initSocietyChart();
+      
+      // Also update society metrics
+      societyMetrics.socialCohesion += (Math.random() * 0.04 - 0.02);
+      societyMetrics.socialCohesion = Math.max(0.1, Math.min(1.0, societyMetrics.socialCohesion));
+      
+      societyMetrics.governanceEffectiveness += (Math.random() * 0.04 - 0.02);
+      societyMetrics.governanceEffectiveness = Math.max(0.1, Math.min(1.0, societyMetrics.governanceEffectiveness));
+      
+      societyMetrics.culturalDiversity += (Math.random() * 0.04 - 0.02);
+      societyMetrics.culturalDiversity = Math.max(0.1, Math.min(1.0, societyMetrics.culturalDiversity));
+      
+      societyMetrics.economicHealth += (Math.random() * 0.04 - 0.02);
+      societyMetrics.economicHealth = Math.max(0.1, Math.min(1.0, societyMetrics.economicHealth));
+      
+      updateSocietyMetrics();
+    }
+    
+    // Add log entry
+    function addLogEntry(type, message) {
+      const log = document.getElementById('activity-log');
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      
+      // Create time
+      const date = new Date();
+      const timeString = date.toTimeString().substring(0, 8);
+      
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'log-time';
+      timeSpan.textContent = timeString;
+      
+      // Create type badge
+      const typeSpan = document.createElement('span');
+      typeSpan.className = `log-type ${type.toLowerCase()}`;
+      typeSpan.textContent = type;
+      
+      // Create message
+      const messageSpan = document.createElement('span');
+      messageSpan.className = 'log-message';
+      messageSpan.textContent = message;
+      
+      entry.appendChild(timeSpan);
+      entry.appendChild(typeSpan);
+      entry.appendChild(messageSpan);
+      
+      log.insertBefore(entry, log.firstChild);
+      
+      // Limit log entries
+      if (log.children.length > 100) {
+        log.removeChild(log.lastChild);
+      }
+    }
+    
+    // Generate random EEG data
+    function generateEEG() {
+      // Random brain activity
+      currentActivityIndex = Math.floor(Math.random() * brainActivityTypes.length);
+      
+      // Generate new state vector
+      stateVector = Array(DIMENSIONS).fill(0).map(() => (Math.random() * 2 - 1));
+      
+      // Update displays
+      updateStateVector();
+      updateMetrics();
+      updateBrainActivity();
+      
+      addLogEntry('SOCIAL', `Brain activity changed to ${brainActivityTypes[currentActivityIndex]}`);
+    }
+    
+    // Process neural data
+    function processNeuralData() {
+      // Simulate processing with time compression
+      updateResourceHistory();
+      
+      // Create random interaction
+      const interactionTypes = [
+        'Collaboration with Agent 3',
+        'Teaching knowledge to Agent 7',
+        'Sharing resources with Agent 2',
+        'Joint problem solving with Agent 5',
+        'Cultural exchange with Agent 9',
+        'Trust-building with Agent 4'
+      ];
+      
+      const interaction = interactionTypes[Math.floor(Math.random() * interactionTypes.length)];
+      addLogEntry('SOCIAL', interaction);
+    }
+    
+    // Influence governance
+    function influenceGovernance() {
+      const governanceActions = [
+        'Created neural policy "Resource Optimization"',
+        'Modified governance structure (Evolution rate: 0.042)',
+        'Implemented decision framework using 11D mapping',
+        'Established consensus protocol with AI agents',
+        'Directed resource allocation based on neural patterns',
+        'Founded Neural Collective group with 7 members'
+      ];
+      
+      const action = governanceActions[Math.floor(Math.random() * governanceActions.length)];
+      addLogEntry('GOVERNANCE', action);
+      
+      // Update society metrics
+      updateSocietyHistory();
+    }
+    
+    // Create cultural meme
+    function createMeme() {
+      const memeTypes = [
+        'Neural Thought Pattern meme created (98.7Hz)',
+        'Emotional Harmonic meme shared with 5 agents',
+        'Conceptual Framework meme (98.9Hz) adopted by society',
+        'Cultural Innovation meme spread to 8 agents',
+        'Memory Integration protocol transmitted (99.1Hz)',
+        'Social Network Pulse meme created (60.0625× compression)'
+      ];
+      
+      const meme = memeTypes[Math.floor(Math.random() * memeTypes.length)];
+      addLogEntry('RESOURCE', meme);
+      
+      // Generate resources
+      const resourceTypes = [
+        'ENERGY', 'KNOWLEDGE', 'TRUST', 'CREATIVITY', 
+        'PROBLEM_SOLVING', 'SOCIAL_CAPITAL', 'MEMORY'
+      ];
+      
+      const resourceType = resourceTypes[Math.floor(Math.random() * resourceTypes.length)];
+      const amount = (Math.random() * 2 + 0.5).toFixed(1);
+      
+      addLogEntry('RESOURCE', `Generated ${resourceType} +${amount} units`);
+      
+      // Update resource history
+      updateResourceHistory();
+    }
+    
+    // Initialize everything
+    function initialize() {
+      updateStateVector();
+      updateMetrics();
+      initBrain();
+      initSocialNetwork();
+      initResourceChart();
+      initSocietyChart();
+      
+      // Automatic simulation
+      if (simulationActive) {
+        setInterval(() => {
+          if (Math.random() < 0.3) {
+            generateEEG();
+            updateBrainActivity();
+          }
+          
+          if (Math.random() < 0.2) {
+            processNeuralData();
+          }
+          
+          if (Math.random() < 0.1) {
+            influenceGovernance();
+          }
+          
+          if (Math.random() < 0.15) {
+            createMeme();
+          }
+          
+          // Update society metrics occasionally
+          if (Math.random() < 0.1) {
+            updateSocietyHistory();
+          }
+          
+          // Rerender social network occasionally
+          if (Math.random() < 0.05) {
+            initSocialNetwork();
+          }
+        }, 2000);
+      }
+    }
+    
+    // Attach event listeners
+    document.getElementById('generate-btn').addEventListener('click', generateEEG);
+    document.getElementById('process-btn').addEventListener('click', processNeuralData);
+    document.getElementById('social-btn').addEventListener('click', () => {
+      processNeuralData();
+      initSocialNetwork();
+    });
+    document.getElementById('governance-btn').addEventListener('click', influenceGovernance);
+    document.getElementById('meme-btn').addEventListener('click', createMeme);
+    document.getElementById('calibrate-btn').addEventListener('click', () => {
+      addLogEntry('GOVERNANCE', `System calibrated at ${COMPRESSION_RATE}× compression rate`);
+      updateSocietyHistory();
+    });
+    
+    // Initialize on page load
+    window.addEventListener('load', initialize);
+  </script>
+</body>
+</html>
