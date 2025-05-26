@@ -27,11 +27,6 @@ from enum import Enum
 import math
 import uuid
 
-# Import SYNTHIX governance system
-sys.path.append('/usr/lib/synthix')
-from governance_system import (GovernanceSystem, SocialRelationship, SocialGroup, 
-                              SocialIdentity, Policy, CulturalMeme, ResourceType)
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
