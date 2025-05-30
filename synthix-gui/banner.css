@@ -1,0 +1,14 @@
+.ascii-banner {
+  color: #00ff00;
+  background: black;
+  font-family: 'Courier New', monospace;
+  font-size: 1.2em;
+  padding: 20px;
+  text-shadow: 0 0 5px #0f0;
+  animation: flicker 0.1s infinite alternate;
+}
+
+@keyframes flicker {
+  from { opacity: 1; }
+  to { opacity: 0.95; }
+}
